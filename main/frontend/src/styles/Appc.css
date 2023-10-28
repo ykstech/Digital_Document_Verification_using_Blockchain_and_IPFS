@@ -1,0 +1,29 @@
+/* Navigation Styles */
+.navbar {
+    background-color: #333; /* Dark background color */
+    padding: 10px 0;
+    text-align: center;
+  }
+  
+  .nav-list {
+    list-style-type: none;
+    padding: 0;
+    display: flex; /* Display list items horizontally */
+    justify-content: center; /* Center-align items horizontally */
+  }
+  
+  .nav-item {
+    margin: 0 15px;
+  }
+  
+  .nav-link {
+    text-decoration: none;
+    color: #fff; /* Text color */
+    font-size: 18px;
+    transition: color 0.3s ease; /* Smooth color transition */
+  }
+  
+  .nav-link:hover {
+    color: #007acc; /* Color on hover */
+  }
+  
