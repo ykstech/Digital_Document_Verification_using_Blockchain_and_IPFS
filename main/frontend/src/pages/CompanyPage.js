@@ -93,7 +93,7 @@ async function checkStatus() {
 async function checkStatusnVerify(_cid) {
   try {
 
-  //  getHash();
+  
     // Call the smart contract function
     console.log("uuid",QrCodeText,"hash",_cid);
 

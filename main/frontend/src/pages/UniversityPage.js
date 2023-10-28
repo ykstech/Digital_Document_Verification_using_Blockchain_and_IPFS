@@ -109,7 +109,7 @@ function UniversityPage() {
 // Define your document upload function
 async function verifyDocument(_oldcid,_newcid) {
   try {
-   //  getHash();
+   
     // Call the smart contract function
     const transaction = await contract.verifyDocument(selectedUUID,_oldcid,_newcid,{ from: account });
     await transaction.wait();
@@ -127,7 +127,7 @@ async function verifyDocument(_oldcid,_newcid) {
 }
 async function unverifyDocument(_newcid) {
   try {
-    //getHash2();
+    
     // Call the smart contract function
     const transaction = await contract.unverifyDocument(selectedUUID,_newcid,{ from: account });
     await transaction.wait();
