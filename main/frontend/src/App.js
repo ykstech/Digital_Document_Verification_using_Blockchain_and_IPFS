@@ -4,6 +4,7 @@ import './styles/Appc.css'; // Import the CSS file for styling
 
 // Import your page components
 import HomePage from './pages/HomePage';
+// app.js
 import StudentPage from './pages/StudentPage';
 import UniversityPage from './pages/UniversityPage';
 import CompanyPage from './pages/CompanyPage';
