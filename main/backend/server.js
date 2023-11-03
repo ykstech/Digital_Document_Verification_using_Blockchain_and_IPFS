@@ -10,6 +10,8 @@ import { v4 as uuid } from "uuid";
 import path from "path";
 import morgan from "morgan";
 import QRCode from "qrcode";
+
+import {connectToDatabase} from './MongoDb/MongoConfig.js';
 const port = 5000;
 const ipfs_port=5001;
 
@@ -150,6 +152,12 @@ app.use(morgan("common"));
       });
     })
   );
+
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+
+ 
+  connectToDatabase();
 
 
 app.listen(port, () => {
