@@ -1,9 +1,29 @@
-import React from "react";
 import { Link } from 'react-router-dom';
 import '../styles/StudentLogin.css';
+import React, { useState } from 'react';
+import axios from 'axios';
 
 const StudentLogin = ()=>{
-
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+  
+    const handleLogin = async (e) => {
+      e.preventDefault();
+      try {
+        const response = await axios.post('http://localhost:5000/login', {
+          email,
+          password,
+        });
+        console.log(response.data.message);
+        if (response.status === 200) {
+            alert("Successfully Login");
+            window.location.href = '/';
+          }
+       
+      } catch (error) {
+        console.error('Error during login:', error);
+      }
+    };
 
     return (
         <>
@@ -12,25 +32,32 @@ const StudentLogin = ()=>{
                 <div className="card mt-5 w-50">
                     <div className="card-body">
                         <h5 className="card-title my-4">Student Login </h5>
-                        <form>
+                        <form onSubmit={handleLogin}>
                             <div className="mb-3">
                                 <input
+                                     required
                                     type="text"
                                     className="form-control"
-                                    placeholder="Username"
+                                    placeholder="email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                 
                                 />
                             </div>
                             <div className="mb-3">
                                 <input
-                                    type="email"
+                                     required
+                                    type="text"
                                     className="form-control"
-                                    placeholder="Email"
+                                    placeholder="password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+       
                                 />
                             </div>
                             <span>
-                                <Link to="/" className="btn btn-dark ">
-                                    Login
-                                </Link>
+                            <button className="btn btn-dark mx-4 " type="submit">Login</button>
+     
                             </span>
 
                         </form>

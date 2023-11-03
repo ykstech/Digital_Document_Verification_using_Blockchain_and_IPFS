@@ -1,12 +1,35 @@
-import React from "react";
 // import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import { Link } from 'react-router-dom';
-import Form from 'react-bootstrap/Form';
 import '../styles/StudentSignup.css'
-import Card from 'react-bootstrap/Card';
-
+import React, { useState } from 'react';
+import axios from 'axios';
 
 const StudentSignup = () => {
+
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [address, setAddress] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+        const response =  await axios.post('http://localhost:5000/students', {
+        name,
+        email,
+        password,
+        address,
+      });
+      console.log(response.data.message);
+      if (response.status === 200) {
+        alert("successfully registered");
+        window.location.href = '/StudentLogin';
+      }
+    
+    } catch (error) {
+      console.error('Error sending data:', error);
+    }
+  };
     return (
         <>
             <div className="container1">
@@ -14,26 +37,36 @@ const StudentSignup = () => {
                 <div className="card mt-5 w-50">
                     <div className="card-body">
                         <h5 className="card-title my-4">Sign Up</h5>
-                        <form>
+                        <form onSubmit={handleSubmit}>
                             <div className="mb-3">
                                 <input
+                                    required
                                     type="text"
                                     className="form-control"
                                     placeholder="Username"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
                                 />
                             </div>
                             <div className="mb-3">
                                 <input
-                                    type="email"
+                                    required
+                                    type="text"
                                     className="form-control"
                                     placeholder="Email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
                                 />
                             </div>
                             <div className="mb-3">
                                 <input
-                                    type="password"
+                                 required
+                                    type="text"
                                     className="form-control"
                                     placeholder="Password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                
                                 />
                             </div>
                             <div className="mb-3">
@@ -41,16 +74,19 @@ const StudentSignup = () => {
                                     type="text"
                                     className="form-control"
                                     placeholder="Metamask Address"
+                                    value={address}
+                                    onChange={(e) => setAddress(e.target.value)}
+                                 
                                 />
                             </div>
                             <span>
-                                <Link to="/StudentLogin" className="btn btn-dark mx-4 ">
+                                {/* <Link to="/StudentLogin" className="btn btn-dark mx-4 ">
                                     Register
-                                </Link>
+                                </Link> */}
+                                <button className="btn btn-dark mx-4 " type="submit">Submit</button>
+     
                             
-                                {/* <Link to="/StudentLogin" className="btn btn-dark mx-10">
-                                    Login
-                                </Link>  */}
+                              
                               </span>
                               
 
