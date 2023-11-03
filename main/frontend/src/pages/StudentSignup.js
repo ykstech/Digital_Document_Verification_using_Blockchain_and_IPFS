@@ -5,7 +5,7 @@ import Form from 'react-bootstrap/Form';
 import '../styles/StudentSignup.css'
 import Card from 'react-bootstrap/Card';
 
-// import './StudentPage'
+
 const StudentSignup = () => {
     return (
         <>
