@@ -23,7 +23,7 @@ const StudentSignup = () => {
       console.log(response.data.message);
       if (response.status === 200) {
         alert("successfully registered");
-        window.location.href = '/';
+        window.location.href = '/StudentLogin';
       }
     
     } catch (error) {
