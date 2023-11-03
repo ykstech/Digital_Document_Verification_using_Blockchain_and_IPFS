@@ -17,13 +17,13 @@ function App() {
     <Router>
       <div>
   <nav className="navbar">
-    <ul className="nav-list">
+    <ul className="nav-list" style={{}}>
       <li className="nav-item">
         <Link to="/" className="nav-link">
           DoQfy
         </Link>
       </li>
-      <li className="nav-item right-align">
+      <li className="nav-item">
         <Link to="/StudentLogin " className="nav-link ">
           Login
         </Link>
