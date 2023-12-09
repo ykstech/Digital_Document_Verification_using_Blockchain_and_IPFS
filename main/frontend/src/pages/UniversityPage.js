@@ -2,6 +2,9 @@ import React, { useState,useEffect } from 'react';
 import axios from 'axios';
 import MetaMaskInfo from './MetaMaskInfo';
 
+import * as XLSX from 'xlsx';
+
+import { v4 as uuid } from "uuid";
 // Create a Web3 instance using the current Ethereum provider (MetaMask)
 function UniversityPage() {
   const [file, setFile] = useState(null);
@@ -20,6 +23,12 @@ function UniversityPage() {
   const [universityDocumentlist, setUniversityDocumentlist] = useState([]); // State for selected company address
   const [selectedUUID, setSelectedUUID] = useState(''); // State for selected company address
   
+  const [excelFile, setExcelFile] = useState(null);
+  const [uploadData, setUploadData] = useState([]);
+  const [selectedFiles, setSelectedFiles] = useState([]);
+
+
+
   const statusdiv= document.getElementById("statusdiv");
  
   const getMetamaskContract = (contract) => {
@@ -49,7 +58,7 @@ function UniversityPage() {
 
 
 
-  const getHash = async () => {
+  const getHash = async () => { //hash for verify//
     const formData = new FormData();
     formData.append('certificate', file);
     formData.append('selectedUUID', selectedUUID); // Include the selectedUUID in the formData
@@ -58,26 +67,59 @@ function UniversityPage() {
       const oldresponse = await axios.post('http://localhost:5000/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-      const newresponse = await axios.post('http://localhost:5000/issue', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
+    
       
       
     console.log(oldresponse.data);
-    console.log(newresponse.data);
 
     setoldCid(oldresponse.data.cid);
-    setnewCid(newresponse.data.cid);
-    setPdfUrl(newresponse.data.ifpsLink);
+   const check= await checkStatusnVerify(oldresponse.data.cid);
     
-    verifyDocument(oldresponse.data.cid,newresponse.data.cid);
+    if(check){
 
+
+    try {
+      const newresponse = await axios.post('http://localhost:5000/issue', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+  
+          console.log(newresponse.data);
+  
+      setnewCid(newresponse.data.cid);
+  
+      setPdfUrl(newresponse.data.ifpsLink);
+      verifyDocument(oldresponse.data.cid,newresponse.data.cid);
+  
     } catch (error) {
       console.error(error);
     }
+  }else{
+    console.error("Document is invalid");
+  }
+
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+async function checkStatusnVerify(_cid) {
+  try {
+
+  
+
+    const transaction = await contract.checknverify(selectedUUID,_cid,{ from: account });
+    
+    console.log('Document is Verified:', transaction);
+      return true;
+  } catch (error) {
+    console.error('Error checking verification status:',error);
+    // Handle the error here
+      return false;
+  }
+}
 
 
-  };
+
   const getHash2 = async () => { //hash for unverify//
     const formData = new FormData();
     formData.append('certificate', file);
@@ -111,6 +153,7 @@ async function verifyDocument(_oldcid,_newcid) {
   try {
    
     // Call the smart contract function
+    console.log("data:",selectedUUID,_oldcid,_newcid);
     const transaction = await contract.verifyDocument(selectedUUID,_oldcid,_newcid,{ from: account });
     await transaction.wait();
     
@@ -121,7 +164,7 @@ async function verifyDocument(_oldcid,_newcid) {
   } catch (error) {
     
     statusdiv.style.display="none";
-    console.error('Error verifying document:',error.reason);
+    console.error('Error verifying document:',error);
     // Handle the error here
   }
 }
@@ -256,6 +299,86 @@ async function viewDocument() {
   window.location.href = `/CompanyPage?document=${selectedUUID}`;
 }
 
+//multiple file uplaod//
+const handleExcelFileChange = (event) => {
+  const file = event.target.files[0];
+  setExcelFile(file);
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const data = new Uint8Array(e.target.result);
+    const workbook = XLSX.read(data, { type: 'array' });
+
+    const sheetName = workbook.SheetNames[0]; // Assuming data is in the first sheet
+    const worksheet = workbook.Sheets[sheetName];
+   
+    const excelData = XLSX.utils.sheet_to_json(worksheet);
+    setUploadData(excelData);
+    console.log("data: ",excelData);
+  };
+  reader.readAsArrayBuffer(file);
+};
+
+const handleFilesChange = (event) => {
+  const files = event.target.files;
+  setSelectedFiles([...selectedFiles, ...files]);
+};
+
+const handlemultipleUpload = async () => {
+  if (!excelFile) {
+    console.error('Please select an Excel file');
+    return;
+  }
+
+  if (uploadData.length === 0) {
+    console.error('No data found in the Excel file');
+    return;
+  }
+
+  try {
+    const uploadDataWithResponses = [];
+    const studentAddressList=[];
+    for (const data of uploadData) {
+      const file = selectedFiles.find((file) => file.name === data.fileName); // Find file by name
+      
+      if (file) {
+        const formData = new FormData();
+        const id = uuid();
+        formData.append('certificate', file);
+        formData.append('selectedUUID', id); // Include the selectedUUID in the formData
+        
+        const response = await axios.post('http://localhost:5000/issue', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+      
+        uploadDataWithResponses.push([id, response.data.cid]);
+        studentAddressList.push(data.studentAddress);
+        console.log("Uploaded for",id,data.studentAddress,response.data);
+      } else {
+        console.error(`File not found for ${data.studentAddress}`);
+      }
+      
+    }
+    uploadDocumentnVerify(uploadDataWithResponses,studentAddressList,uploadDataWithResponses.length);
+  } catch (error) {
+    console.error('Error occurred during upload:', error);
+  }
+};
+async function uploadDocumentnVerify(data,studentAddressList,count) {
+  try {
+    console.log("data:",data,"studentaddress:",studentAddressList," count: ",count);
+    const transaction = await contract.uploadDocumentnVerify(data,studentAddressList,count,{ from: account });
+    await transaction.wait();
+    
+    console.log('Document upload n Verifying successfully:', transaction);
+
+
+  } catch (error) {
+    
+    console.error('Error upload n verifying document:',error);
+    // Handle the error here
+  }
+}
 
   return (
     <div className="App">
@@ -275,29 +398,28 @@ async function viewDocument() {
             </option>
           ))}
         </select>
+        <button onClick={viewDocument}>view Document</button>
+
       </div>
 
-      <button onClick={viewDocument}>view Document</button>
 
       
       <input type="file" accept=".pdf" onChange={handleFileChange} />
-      {/* <button onClick={getHash}>Generate Hash for verify</button>
-     */}
-
-<div id="statusdiv" style={{ display: 'none' }}> 
      
-       <p>new IPFS Hash: {newcid}</p>
-       <a target='_blank' href={pdfUrl}>View uploaded document</a>
-       </div>
-
      
       <button onClick={getHash}>Verify Document</button>
 
 
      <br></br><br></br>
-      {/* <button onClick={getHash2}>Generate Hash for unverify</button>
-     */}
+      
       <button onClick={getHash2}>unVerify Document</button>
+      <br></br><br></br>
+      <div id="statusdiv" style={{ display: 'none' }}> 
+     
+       <p>new IPFS Hash: {newcid}</p>
+       <a target='_blank' href={pdfUrl}>View uploaded document</a>
+      </div>
+
 
       
 
@@ -315,8 +437,12 @@ async function viewDocument() {
       
       <button onClick={includeCompany}>include Company</button>
       <button onClick={removeCompany}>remove Company</button>
-
-      
+     <h4>Upload Multiple Files</h4>
+      <div>
+      <input type="file" accept=".xlsx, .xls" onChange={handleExcelFileChange} />
+      <input type="file" accept=".pdf" multiple onChange={handleFilesChange} />
+      <button onClick={handlemultipleUpload}>Upload n verify</button>
+      </div>
      
 
     </div>

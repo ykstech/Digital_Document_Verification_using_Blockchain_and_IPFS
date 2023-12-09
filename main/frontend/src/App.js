@@ -23,31 +23,31 @@ function App() {
           DoQfy
         </Link>
       </li>
-      <li className="nav-item">
+      {/* <li className="nav-item">
         <Link to="/StudentLogin " className="nav-link ">
           Login
         </Link>
-      </li>
-      {/* <li className="nav-item">
+      </li> */}
+      <li className="nav-item">
         <Link to="/StudentPage" className="nav-link">
           Student Page
         </Link>
-      </li> */}
-      {/* <li className="nav-item">
+      </li> 
+       <li className="nav-item">
         <Link to="/UniversityPage" className="nav-link">
           University Page
         </Link>
-      </li> */}
-      {/* <li className="nav-item">
+      </li> 
+       <li className="nav-item">
         <Link to="/CompanyPage" className="nav-link">
           Company Page
         </Link>
-      </li> */}
-      {/* <li className="nav-item">
+      </li> 
+      <li className="nav-item">
         <Link to="/OwnerPage" className="nav-link">
           Owner Page
         </Link>
-      </li> */}
+      </li>
       {/* <li className="nav-item">
         <Link to="/StudentSignup" className="nav-link">
           StudentSignup

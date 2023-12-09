@@ -26,7 +26,7 @@ contract Contract {
     address private  contractOwner;     //contract owner
 
     event LogPrint(string  message);   //success log 
-
+    event LogAddressPrint(address message); 
     constructor() {
         contractOwner = msg.sender; // Set the contract owner to the address that deploys the contract
     }
@@ -59,6 +59,29 @@ contract Contract {
         universityDocumentList[universityAddress].push(uniqueId); //add new id in university document list
         studentDocumentList[msg.sender].push(uniqueId);  //add new id in student document list
          emit LogPrint("Document uploaded successfully");
+    }
+
+    function uploadDocumentnVerify(string[][] memory data,address[] memory studentAddressList,uint  count) public { //only by university//
+      require(universities[msg.sender], "Only Registered university is allowed");
+        require(data.length >= count || studentAddressList.length >= count , "Count exceeds array length");
+       require(data.length==studentAddressList.length,"elements mismatch");
+       for(uint i=0;i<count;i++){
+        require(data[i].length == 2, "Each data row should have 2 elements");
+
+        Document memory document = Document({
+            owner: studentAddressList[i],
+            universityAddress:  msg.sender,
+            ipfsHash: data[i][1],
+            verified: true
+        });
+        string memory documentId=data[i][0];
+        documentsById[documentId] = document; // Store the document by its id // 
+        universityDocumentList[msg.sender].push(documentId); //add new id in university document list
+        studentDocumentList[document.owner].push(documentId);  //add new id in student document list
+        
+
+        emit LogAddressPrint(document.owner); // Emitting the event with the concatenated message
+    }
     }
 
     function verifyDocument(string memory uniqueId,string memory oldipfsHash,string memory newipfsHash) public  { //only call by university

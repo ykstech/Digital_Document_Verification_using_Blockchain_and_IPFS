@@ -128,7 +128,7 @@ app.use(morgan("common"));
     }
   });
   
-  
+  //issue//
   app.post(
     "/issue",
     upload.single("certificate"),
@@ -157,7 +157,7 @@ app.use(morgan("common"));
   /////////////////////////////////////////////////////////////////////////////////////////////////
 
  
-  connectToDatabase();
+//  connectToDatabase();
 
 
 app.listen(port, () => {
