@@ -1,6 +1,6 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect,useContext } from 'react';
+import { MetaMaskContext } from '../context/MetaMaskContext';
 import axios from 'axios';
-import MetaMaskInfo from './MetaMaskInfo';
 
 import * as XLSX from 'xlsx';
 
@@ -12,10 +12,8 @@ function UniversityPage() {
   const [newcid, setnewCid] = useState(null);
   
   const [pdfUrl, setPdfUrl] = useState(null);
-  
-  const [account, setAccount] = useState('');
-  const [web3, setWeb3] = useState(null);
-  const [contract, setContract] = useState(null);
+
+  const { contract, account } = useContext(MetaMaskContext);
 
   const [companyAddresses, setCompanyAddresses] = useState([]);
   const [selectedCompany, setSelectedCompany] = useState(''); // State for selected company address
@@ -31,22 +29,6 @@ function UniversityPage() {
 
   const statusdiv= document.getElementById("statusdiv");
  
-  const getMetamaskContract = (contract) => {
-    // Handle the data received from the child component
-    console.log('Contract from metamask:', contract);
-    setContract(contract);
-
-  };
-  const getMetamaskAccount = (account) => {
-    // Handle the data received from the child component
-    console.log('Account from metamask:', account);
-    setAccount(account);
-  };
-  const getMetamaskWeb3 = (web3var) => {
-    // Handle the data received from the child component
-    console.log('web3 from metamask:', web3var);
-    setWeb3(web3var);
-  };
 
 
   const handleFileChange = (e) => {
@@ -207,7 +189,7 @@ async function unverifyDocument(_newcid) {
   const fetchCompanyAddresses = async () => {
     try {
       const transaction = await contract.getAllCompanyAddresses({ from: account });
-      console.log('Response from smart contract:', transaction); // Log the response
+      console.log('fetch company addresses:', transaction); // Log the response
       const uniqueAddressesSet = new Set(transaction);
       // Convert the Set back to an array.
       const uniqueAddressesArray = [...uniqueAddressesSet];
@@ -382,8 +364,8 @@ async function uploadDocumentnVerify(data,studentAddressList,count) {
 
   return (
     <div className="App">
-      <MetaMaskInfo Contract={getMetamaskContract} Account={getMetamaskAccount} Web3var={getMetamaskWeb3}/>
-    
+        <br/>
+      <h5>Account:{account}</h5>
       <h3>Add University</h3>
       <button onClick={addUniversityfn}>Add university</button><br></br>
       <button onClick={checkUniversity}>check University</button>

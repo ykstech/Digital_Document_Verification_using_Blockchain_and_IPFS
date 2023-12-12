@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useContext } from 'react';
+import { MetaMaskContext } from '../context/MetaMaskContext';
 import axios from 'axios';
-import MetaMaskInfo from './MetaMaskInfo';
 import { useLocation } from 'react-router-dom';
 
 // Create a Web3 instance using the current Ethereum provider (MetaMask)
@@ -10,9 +10,7 @@ function CompanyPage() {
   const [status, setStatus] = useState([]);
   const [QrCodeText, setQrCodeText] = useState('');
 
-  const [account, setAccount] = useState('');
-  const [web3, setWeb3] = useState(null);
-  const [contract, setContract] = useState(null);
+  const { contract, account } = useContext(MetaMaskContext);
 
   const location = useLocation();
  
@@ -26,22 +24,6 @@ function CompanyPage() {
   }, [location.search]);
 
 
-  const getMetamaskContract = (contract) => {
-    // Handle the data received from the child component
-    console.log('Contract from metamask:', contract);
-    setContract(contract);
-
-  };
-  const getMetamaskAccount = (account) => {
-    // Handle the data received from the child component
-    console.log('Account from metamask:', account);
-    setAccount(account);
-  };
-  const getMetamaskWeb3 = (web3var) => {
-    // Handle the data received from the child component
-    console.log('web3 from metamask:', web3var);
-    setWeb3(web3var);
-  };
 
 
   const handleFileChange = (e) => {
@@ -147,8 +129,8 @@ async function addCompanyfn() {
   
     return (
       <div className="App">
-        <MetaMaskInfo Contract={getMetamaskContract} Account={getMetamaskAccount} Web3var={getMetamaskWeb3}/>
-      
+         <br/>
+      <h5>Account:{account}</h5>
         <h3>Register Company</h3>
         <button onClick={addCompanyfn}>Register Company</button><br></br>
         <button onClick={checkCompany}>check company</button>

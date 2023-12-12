@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useContext } from 'react';
+import { MetaMaskContext } from '../context/MetaMaskContext';
 import axios from 'axios';
-import MetaMaskInfo from './MetaMaskInfo';
 
 // Create a Web3 instance using the current Ethereum provider (MetaMask)
 function StudentPage() {
@@ -9,9 +9,10 @@ function StudentPage() {
   const [pdfUrl, setPdfUrl] = useState(null);
   const [uuid, setUUID] = useState(null);
 
-  const [account, setAccount] = useState('');
-  const [web3, setWeb3] = useState(null);
-  const [contract, setContract] = useState(null);
+
+  const { contract, account } = useContext(MetaMaskContext);
+
+  
 
   const [universityAddresses, setUniversityAddresses] = useState([]);
   const [selectedUniversity, setSelectedUniversity] = useState(''); // State for selected university address
@@ -23,22 +24,6 @@ function StudentPage() {
   
   const statusdiv= document.getElementById("statusdiv");
 
-  const getMetamaskContract = (contract) => {
-    // Handle the data received from the child component
-    console.log('Contract from metamask:', contract);
-    setContract(contract);
-
-  };
-  const getMetamaskAccount = (account) => {
-    // Handle the data received from the child component
-    console.log('Account from metamask:', account);
-    setAccount(account);
-  };
-  const getMetamaskWeb3 = (web3var) => {
-    // Handle the data received from the child component
-    console.log('web3 from metamask:', web3var);
-    setWeb3(web3var);
-  };
   
 
   const handleFileChange = (e) => {
@@ -194,8 +179,8 @@ async function uploadDocument(uniqueId,ipfsHash, universityAddress) {
 
   return (
     <div className="App">
-      <MetaMaskInfo Contract={getMetamaskContract} Account={getMetamaskAccount} Web3var={getMetamaskWeb3}/>
-    
+      <br/>
+      <h5>Account:{account}</h5>
       <h1>IPFS File Upload</h1>
        <div>
         <label>Select a University:</label>
