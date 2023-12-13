@@ -170,7 +170,7 @@ function OwnerPage() {
   }
   
   return (
-    <div className="App">
+    <div >
         <br/>
       <h5>Account:{account}</h5>
       <button onClick={getOwner}>Get Owner of contract</button>

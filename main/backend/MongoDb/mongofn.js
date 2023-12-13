@@ -4,13 +4,18 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 
+import dotenv from 'dotenv';
+
+// Load environment variables from .env file
+dotenv.config();
+
 const app = express();
 app.use(cors());
 
 const PORT = 5000;
 
 // Replace the connection string with your MongoDB Atlas connection string
-const uri = 'mongodb+srv://yash:yash5364@doqfy.afh1dtv.mongodb.net/';
+const uri = process.env.DB_URI;
 mongoose.connect(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,

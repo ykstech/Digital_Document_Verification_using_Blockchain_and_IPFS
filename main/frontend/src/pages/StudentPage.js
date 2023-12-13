@@ -178,7 +178,7 @@ async function uploadDocument(uniqueId,ipfsHash, universityAddress) {
 };
 
   return (
-    <div className="App">
+    <div >
       <br/>
       <h5>Account:{account}</h5>
       <h1>IPFS File Upload</h1>

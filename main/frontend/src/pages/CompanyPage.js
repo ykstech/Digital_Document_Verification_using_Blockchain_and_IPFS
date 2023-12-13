@@ -128,7 +128,7 @@ async function addCompanyfn() {
   
   
     return (
-      <div className="App">
+      <div>
          <br/>
       <h5>Account:{account}</h5>
         <h3>Register Company</h3>

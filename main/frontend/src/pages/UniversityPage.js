@@ -363,7 +363,7 @@ async function uploadDocumentnVerify(data,studentAddressList,count) {
 }
 
   return (
-    <div className="App">
+    <div>
         <br/>
       <h5>Account:{account}</h5>
       <h3>Add University</h3>

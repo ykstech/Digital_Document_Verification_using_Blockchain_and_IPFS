@@ -6,3 +6,4 @@
 /appended
 /.pnp
 .pnp.js
+.env

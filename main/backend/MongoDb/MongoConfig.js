@@ -1,5 +1,5 @@
 import { MongoClient } from 'mongodb';
-const uri = 'mongodb+srv://PratikEk:Pratik1372@cluster0.gcsram6.mongodb.net/';
+const uri = '';
 const client = new MongoClient(uri, { useNewUrlParser: true });
 
 async function connectToDatabase() {
