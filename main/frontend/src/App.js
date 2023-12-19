@@ -17,19 +17,19 @@ import LoginPage from './pages/LoginPage';
 function App() {
   return (
     <Router>
-    <HeaderPage/>
-<MetaMaskProvider>
-  <MetaMaskInfo/>
+      <HeaderPage />
+      <MetaMaskProvider>
+        <MetaMaskInfo />
         <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/StudentPage" element={<StudentPage />} />
-        <Route path="/UniversityPage" element={<UniversityPage />} />
-        <Route path="/CompanyPage" element={<CompanyPage />} />
-        <Route path="/OwnerPage" element={<OwnerPage />} />
-        <Route path="/LoginPage" element={<LoginPage />} />
-         
+          <Route path="/" element={<HomePage />} />
+          <Route path="/StudentPage" element={<StudentPage />} />
+          <Route path="/UniversityPage" element={<UniversityPage />} />
+          <Route path="/CompanyPage" element={<CompanyPage />} />
+          <Route path="/OwnerPage" element={<OwnerPage />} />
+          <Route path="/LoginPage" element={<LoginPage />} />
+
         </Routes>
-</MetaMaskProvider>      
+      </MetaMaskProvider>
     </Router>
   );
 }
